@@ -1,5 +1,4 @@
 @import "reset.css";
-// Typography
 
 /*
 Modular Scale
@@ -18,6 +17,13 @@ Modular Scale
 0.088em
 */
 
+
+/* ***********
+
+General Typography
+
+************* */
+
 h1,
 h2,
 h3,
@@ -25,7 +31,7 @@ h4,
 h5,
 h6 {
     color: #333;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Questrial', sans-serif;
     line-height: 1.5em;
 }
 
@@ -37,9 +43,38 @@ h2 {
     font-size: 2.25em;
 }
 
-p {
-    color: #666;
+p,
+li {
+    max-width: 40em;
 }
+li {
+    padding:1em 0;
+}
+
+a {
+    color: #333;
+    text-decoration: underline;
+    &:hover {
+        font-weight: 700; // text-decoration: underline;
+    }
+    &:active {
+        color: black;
+    }
+}
+
+body {
+    color: #666;
+    font-family: 'Mukta Vaani', sans-serif;
+    font-weight: 300;
+    font-size: 18px; //base font
+}
+
+
+/* **********
+
+General Layout
+
+********** */
 
 main {
     max-width: 1440px;
@@ -47,4 +82,23 @@ main {
 
 .feature-img {
     width: 100%;
+}
+
+body {
+    padding: 5em;
+}
+
+section {
+    padding: 2em 0;
+}
+
+header {
+    p {
+        margin: 1em 0;
+    }
+    span {
+        color: #333;
+        font-size: 1.15em;
+        font-weight: 700;
+    }
 }
