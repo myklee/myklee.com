@@ -1,26 +1,9 @@
+@import "variables.less";
 @import "reset.css";
-
-/*
-Modular Scale
-11.391em
-7.594em
-5.063em
-3.375em
-2.25em
-1.5em
-1em
-0.667em
-0.444em
-0.296em
-0.198em
-0.132em
-0.088em
-*/
-
 
 /* ***********
 
-General Typography
+General Typography -gt
 
 ************* */
 
@@ -30,7 +13,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: #333;
+    color: @hColor;
     font-family: 'Questrial', sans-serif;
     line-height: 1.5em;
 }
@@ -43,38 +26,18 @@ h2 {
     font-size: 2.25em;
 }
 
-p,
-li {
-    max-width: 40em;
-}
-li {
-    padding:1em 0;
-}
-
-a {
-    color: #333;
-    text-decoration: underline;
-    &:hover {
-        font-weight: 700; // text-decoration: underline;
-    }
-    &:active {
-        color: black;
-    }
-}
-
 body {
-    color: #666;
     font-family: 'Mukta Vaani', sans-serif;
     font-weight: 300;
-    font-size: 18px; //base font
+    font-size: @baseFont;
 }
 
 
-/* **********
+/* *********
 
-General Layout
+General Styles -gs
 
-********** */
+********* */
 
 main {
     max-width: 1440px;
@@ -85,7 +48,7 @@ main {
 }
 
 body {
-    padding: 5em;
+    padding: 4em 6em;
 }
 
 section {
@@ -97,15 +60,72 @@ header {
         margin: 1em 0;
     }
     span {
-        color: #333;
+        color: @hColor;
         font-size: 1.15em;
         font-weight: 700;
+    }
+    a {
+        color: @aColor;
     }
 }
 
 .links {
     li {
         padding: 1em 2em 1em 0;
-        float:left;
+        float: left;
     }
+}
+
+#product,
+#design,
+#development {
+    p,
+    li {
+        // max-width: 25em;
+        min-width: 30em;
+    }
+}
+
+a {
+    color: #333;
+    text-decoration: underline;
+    &:active {
+        color: black;
+    }
+}
+
+p,
+li {
+    max-width: 30em;
+}
+
+p {
+    color: #666;
+}
+
+ul {
+    padding-top: 1em;
+}
+
+li {
+    color: #888;
+    padding: 0 0 .5em 1em;
+}
+
+
+/* **********
+
+Responsive
+
+********* */
+@media all and (max-width: 1024px) {
+    body {
+        font-size: @mBaseFont;
+        padding: 2.5em;
+    }
+}
+
+.hide {
+    position: absolute;
+    clip: rect(0 0 0 0);
 }
