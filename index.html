@@ -37,25 +37,21 @@
                 <li>User Experience Design</li>
                 <li>Graphic Design and Art Direction</li>
             </ul>
-            <div class="siema">
-                <div>Slider</div>
-                <div>Slider2</div>
-                <div>Slider3</div>
-            </div>
+            <ul class="siema">
+                <li>Slider</li>
+                <li>Slider2</li>
+                <li>Slider3</li>
+            </ul>
             <script type="text/javascript">
-                // const designSlider = document.querySelector('.design-slider');
-                // const mySiema = new Siema({
-                //     selector: design - slider,
-                //     duration: 100,
-                //     loop: true
-                // });
                 var mySiema = new Siema({
-                    duration: 100,
-                    loop: true
+                    startIndex:0,
+                    duration: 500,
+                    loop:true
+                   
                 });
-
-                // listen for keydown event
-                setInterval(() => mySiema.next(), 5000)
+                setInterval(function () {
+                    return mySiema.next();
+                }, 500);
             </script>
         </section>
         <section id="development">
