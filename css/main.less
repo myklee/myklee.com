@@ -41,9 +41,7 @@ General Styles -gs
 
 // main {
 //     // max-width: 1440px;
-
 // }
-
 .feature-img {
     width: 100%;
 }
@@ -80,11 +78,7 @@ header {
 #product,
 #design,
 #development {
-    p,
-    li {
-        // max-width: 25em;
-        min-width: 30em;
-    }
+
 }
 
 a {
@@ -94,24 +88,24 @@ a {
         color: black;
     }
 }
-
-p,
-li {
-    max-width: 65em;
-}
-
 p {
     color: #666;
 }
 
-ul {
-    padding-top: 1em;
+
+
+/* **********
+
+Carousel
+
+**********/
+
+.carousel-cell {
+    width: 100%;
+    height: 560px;
+    background-color: #c00;
 }
 
-li {
-    color: #888;
-    padding: 0 0 .5em 1em;
-}
 
 
 /* **********
@@ -119,6 +113,7 @@ li {
 Responsive
 
 ********* */
+
 @media all and (max-width: 1024px) {
     body {
         font-size: @mBaseFont;
