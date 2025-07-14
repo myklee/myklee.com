@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Icons Gallery</title>
+    <style>
+        /* Base Gallery Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .gallery-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .gallery-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .gallery-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .gallery-controls {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .control-group select,
+        .control-group button {
+            padding: 8px 16px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background: white;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-group select:hover,
+        .control-group button:hover {
+            border-color: #3498db;
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.1);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .icon-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .icon-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            position: relative;
+            background: radial-gradient(circle, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-container svg {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .icon-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .icon-description {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .icon-weather-code {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .weather-icon-animated {
+            --delayBase: 1s;
+        }
+
+        /* Animation Controls */
+        .paused .weather-icon-animated * {
+            animation-play-state: paused !important;
+        }
+
+        .slow .weather-icon-animated * {
+            animation-duration: 10s !important;
+        }
+
+        .fast .weather-icon-animated * {
+            animation-duration: 0.5s !important;
+        }
+
+        /* Weather Icon Animations */
+        .droplet, .sleet {
+            animation-name: precipitation;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        .droplet {
+            animation-duration: 0.75s;
+        }
+
+        @keyframes precipitation {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+            33% {
+                opacity: 0.75;
+            }
+            66% {
+                opacity: 0.75;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-8%, 22%);
+            }
+        }
+
+        .bolt {
+            animation-name: bolt;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: cubic-bezier(1, 0, 1, 0);
+        }
+
+        @keyframes bolt {
+            0% {
+                transform: translate(0, -24%);
+            }
+            50% {
+                transform: translate(0, 3%);
+            }
+            100% {
+                transform: translate(0, 3%);
+            }
+        }
+
+        .cloud-thunder {
+            animation-name: cloud-thunder;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: cubic-bezier(1, 0, 1, 0);
+            transform-origin: 50% 0;
+        }
+
+        @keyframes cloud-thunder {
+            45% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            48% {
+                transform: translate(1%, 0) rotate(-3deg);
+            }
+            51% {
+                transform: translate(-1%, 0) rotate(3deg);
+            }
+            54% {
+                transform: translate(0, 0) rotate(0);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .flash {
+            animation-name: cloud-thunder-flash;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            transform-origin: 50% 0;
+            opacity: 0;
+        }
+
+        @keyframes cloud-thunder-flash {
+            45% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            48% {
+                transform: translate(1%, 0) rotate(-3deg);
+            }
+            51% {
+                transform: translate(-1%, 0) rotate(3deg);
+            }
+            54% {
+                transform: translate(0, 0) rotate(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .rays-clear-day {
+            animation-name: rotate;
+            animation-duration: 20s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            transform-origin: center;
+            opacity: 0.5;
+        }
+
+        .shades {
+            animation-duration: 20s;
+            animation-name: shades;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            transform-origin: center;
+            opacity: 0;
+        }
+
+        @keyframes shades {
+            from {
+                transform: translate(0, -12.5%);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0;
+            }
+            77% {
+                transform: translate(0, -12.5%);
+                opacity: 0;
+            }
+            78% {
+                transform: translate(0, 2px);
+                opacity: 1;
+            }
+            78.5% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            97.75% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            to {
+                transform: translate(0, -8px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                opacity: 1;
+                transform: rotate(90deg) scale(0.95);
+            }
+            50% {
+                transform: rotate(180deg) scale(1);
+            }
+            75% {
+                opacity: 1;
+                transform: rotate(270deg) scale(0.95);
+            }
+            to {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .wind {
+            --duration: 3s;
+            fill: transparent;
+            animation-duration: var(--duration);
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+            stroke-dashoffset: 0;
+        }
+
+        .wind-top {
+            stroke-dasharray: 49.02180862426758;
+            animation-name: wind-top;
+        }
+
+        .wind-middle {
+            stroke-dasharray: 82.98904418945312;
+            animation-delay: calc(var(--duration) * 0.1);
+            animation-name: wind-middle;
+        }
+
+        .wind-bottom {
+            stroke-dasharray: 63.14111328125;
+            animation-delay: calc(var(--duration) * 0.2);
+            animation-name: wind-bottom;
+        }
+
+        @keyframes wind-top {
+            0% {
+                stroke-dashoffset: 49.02180862426758;
+            }
+            10% {
+                stroke-dashoffset: 0;
+            }
+            97% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes wind-middle {
+            0% {
+                stroke-dashoffset: 82.98904418945312;
+            }
+            10% {
+                stroke-dashoffset: 0;
+            }
+            97% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes wind-bottom {
+            0% {
+                stroke-dashoffset: 63.14111328125;
+            }
+            10% {
+                stroke-dashoffset: 0;
+            }
+            97% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Delay Classes */
+        .delay1 { animation-delay: calc(var(--delayBase) * 0.1); }
+        .delay2 { animation-delay: calc(var(--delayBase) * 0.2); }
+        .delay3 { animation-delay: calc(var(--delayBase) * 0.3); }
+        .delay4 { animation-delay: calc(var(--delayBase) * 0.4); }
+        .delay5 { animation-delay: calc(var(--delayBase) * 0.5); }
+        .delay6 { animation-delay: calc(var(--delayBase) * 0.6); }
+        .delay7 { animation-delay: calc(var(--delayBase) * 0.7); }
+        .delay8 { animation-delay: calc(var(--delayBase) * 0.8); }
+        .delay9 { animation-delay: calc(var(--delayBase) * 0.9); }
+        .delay10 { animation-delay: calc(var(--delayBase) * 1); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .gallery-header {
+                padding: 20px;
+            }
+            
+            .gallery-header h1 {
+                font-size: 2em;
+            }
+            
+            .gallery-controls {
+                padding: 15px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1>Weather Icons Gallery</h1>
+            <p>Animated SVG weather icons with interactive controls</p>
+        </div>
+        
+        <div class="gallery-controls">
+            <div class="control-group">
+                <label>Animation Speed:</label>
+                <select id="speedControl">
+                    <option value="normal">Normal</option>
+                    <option value="slow">Slow</option>
+                    <option value="fast">Fast</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <button id="pauseBtn">Pause All</button>
+                <button id="playBtn">Play All</button>
+            </div>
+            
+            <div class="control-group">
+                <label>Background:</label>
+                <select id="bgControl">
+                    <option value="default">Default</option>
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Icons will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Weather icon data with descriptions and codes
+        const weatherIcons = [
+            {
+                name: "Clear Day",
+                description: "Sunny, clear skies",
+                codes: [800],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path d="M32.164 42.188c5.536 0 10.024-4.488 10.024-10.024 0-5.536-4.488-10.024-10.024-10.024-5.536 0-10.023 4.488-10.023 10.024 0 5.536 4.487 10.024 10.023 10.024z" fill="#F9D915"/>
+                        <path class="rays-clear-day" fill-rule="evenodd" clip-rule="evenodd" d="M32.152 18.352c-.716 0-1.408.05-2.124.149l1.313-10.073s.024-.025.024-.05a.85.85 0 01.716-.693.863.863 0 01.954.743v.024l1.266 10.073a15.12 15.12 0 00-2.149-.173zm-.305 27.296c.717 0 1.409-.075 2.125-.149l-1.313 10.08s-.024.025-.024.05a.849.849 0 01-.716.691h-.12c-.405 0-.763-.321-.835-.741v-.025L29.7 45.474c.693.1 1.409.174 2.148.174zm9.911-23.19c-.506-.507-1.03-.961-1.607-1.398l8.051-6.194s.035-.001.052-.018a.85.85 0 01.996.016.863.863 0 01.15 1.2l-.017.017-6.228 8.018c-.42-.56-.874-1.119-1.397-1.642zM22.242 41.541c.506.507 1.048.944 1.607 1.398l-8.056 6.199s-.034 0-.052.018a.849.849 0 01-.995-.017l-.084-.085c-.287-.287-.313-.767-.067-1.114l.017-.018 6.233-8.022c.42.56.874 1.118 1.397 1.641zm.215-19.3c-.506.506-.96 1.03-1.397 1.607l-6.194-8.051s-.001-.035-.018-.052a.85.85 0 01.016-.996.863.863 0 011.2-.15l.017.017 8.018 6.228c-.56.42-1.119.874-1.642 1.397zm19.085 19.516c.507-.506.944-1.048 1.398-1.607l6.199 8.056s0 .034.018.051a.849.849 0 01-.017.996l-.085.084c-.287.287-.767.313-1.114.067l-.018-.017-8.022-6.233a15.15 15.15 0 001.641-1.397zm-23.19-9.91c0 .716.074 1.408.173 2.124L8.427 32.659s-.024-.024-.05-.024a.85.85 0 01-.692-.716.863.863 0 01.742-.954h.025L18.525 29.7a15.118 15.118 0 00-.173 2.148zm37.963.244a.858.858 0 01-.72.936h-.024l-10.096 1.273c.099-.697.173-1.417.173-2.16 0-.72-.05-1.417-.174-2.113l10.097 1.32s.025.024.05.024c.371.072.644.36.694.72z" fill="#F9D915"/>
+                        <path class="shades" d="M44.604 27.488l-.05-.36-.36-.063a23.868 23.868 0 00-5.59-.32 26.435 26.435 0 00-5.302.88c-.467.082-.785.116-.974.116-.214 0-.576-.044-1.11-.148a26.44 26.44 0 00-5.182-.848 23.868 23.868 0 00-5.59.32l-.36.062-.05.361c-.095.674-.078 1.275.119 1.75a.877.877 0 00.292.362c.093.07.194.123.258.157h.001l.07.037c.487 2.269.855 3.433 1.71 4.403.428.486.898.863 1.566 1.115.653.246 1.462.362 2.55.386 1.351.03 2.296-.3 2.954-.723.613-.394.95-.852 1.114-1.077l.03-.04c.324-.438.932-1.476 1.342-3.112a.324.324 0 01.104-.137c.03-.02.082-.043.182-.043.1 0 .148.023.174.04a.283.283 0 01.092.123c.41 1.646 1.021 2.69 1.346 3.128l.03.04c.164.226.5.684 1.114 1.078.658.423 1.603.753 2.953.723 1.089-.024 1.898-.14 2.55-.386.669-.252 1.139-.63 1.567-1.115.855-.97 1.223-2.134 1.71-4.403l.07-.037h.001c.064-.034.165-.087.258-.157a.877.877 0 00.292-.362c.197-.475.214-1.076.12-1.75zm-23.763 2.346l-.004-.004a.028.028 0 01.004.004zm22.962-.004a.035.035 0 01-.004.004l.004-.004z" fill="#253031" stroke="#F9D915"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Partly Cloudy Day",
+                description: "Partly cloudy with sun",
+                codes: [801],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path d="M32.164 42.188c5.536 0 10.024-4.488 10.024-10.024 0-5.536-4.488-10.024-10.024-10.024-5.536 0-10.023 4.488-10.023 10.024 0 5.536 4.487 10.024 10.023 10.024z" fill="#F9D915"/>
+                        <path class="rays-clear-day" fill-rule="evenodd" clip-rule="evenodd" d="M32.152 18.352c-.716 0-1.408.05-2.124.149l1.313-10.073s.024-.025.024-.05a.85.85 0 01.716-.693.863.863 0 01.954.743v.024l1.266 10.073a15.12 15.12 0 00-2.149-.173z" fill="#F9D915"/>
+                        <path class="pc-cloud" fill-rule="evenodd" clip-rule="evenodd" d="M50.1709 30.6282C49.3251 24.9906 43.291 20.5568 36.7686 23.899C35.3589 18.2069 31.0237 14.08 24.6522 14.08C17.7451 14.08 10.3955 18.0224 10.6769 28.16C6.3972 27.0336 2.9441 29.3661 1.90098 33.3769C0.948934 37.0376 2.9441 42.24 10.3955 42.24C26.3525 42.24 36.574 42.24 41.0602 42.24C47.7895 42.24 51.0166 36.2658 50.1709 30.6282Z" fill="#DDDDDD"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Cloudy",
+                description: "Overcast, cloudy skies",
+                codes: [802, 803, 804],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" fill="#DDDDDD"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Rain",
+                description: "Moderate rain",
+                codes: [500, 501, 520, 521, 531],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" fill="#DDDDDD"/>
+                        <path class="droplet delay2" d="M19.7047 44.8937C19.9334 44.0402 19.4269 43.1628 18.5733 42.9341C17.7198 42.7054 16.8424 43.2119 16.6137 44.0655L15.2057 49.3201C14.977 50.1737 15.4836 51.051 16.3371 51.2797C17.1907 51.5084 18.068 51.0019 18.2967 50.1483L19.7047 44.8937Z" fill="#3396CC"/>
+                        <path class="droplet delay6" d="M29.0318 44.8937C29.2605 44.0402 28.754 43.1628 27.9005 42.9341C27.0469 42.7054 26.1696 43.2119 25.9409 44.0655L24.5329 49.3201C24.3042 50.1737 24.8107 51.051 25.6643 51.2797C26.5178 51.5084 27.3951 51.0019 27.6239 50.1483L29.0318 44.8937Z" fill="#3396CC"/>
+                        <path class="droplet delay3" d="M38.359 44.8937C38.5877 44.0402 38.0812 43.1628 37.2276 42.9341C36.3741 42.7054 35.4967 43.2119 35.268 44.0655L33.86 49.3201C33.6313 50.1737 34.1379 51.051 34.9914 51.2797C35.845 51.5084 36.7223 51.0019 36.951 50.1483L38.359 44.8937Z" fill="#3396CC"/>
+                        <path class="droplet delay8" d="M47.6861 44.8937C47.9148 44.0402 47.4083 43.1628 46.5548 42.9341C45.7012 42.7054 44.8239 43.2119 44.5952 44.0655L43.1872 49.3201C42.9585 50.1737 43.465 51.051 44.3186 51.2797C45.1721 51.5084 46.0494 51.0019 46.2782 50.1483L47.6861 44.8937Z" fill="#3396CC"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Heavy Rain",
+                description: "Heavy rainfall",
+                codes: [502, 503, 504, 522],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" fill="#888888"/>
+                        <path class="droplet delay1" d="M15.7047 44.8937C15.9334 44.0402 15.4269 43.1628 14.5733 42.9341C13.7198 42.7054 12.8424 43.2119 12.6137 44.0655L11.2057 49.3201C10.977 50.1737 11.4836 51.051 12.3371 51.2797C13.1907 51.5084 14.068 51.0019 14.2967 50.1483L15.7047 44.8937Z" fill="#1976D2"/>
+                        <path class="droplet delay3" d="M25.0318 44.8937C25.2605 44.0402 24.754 43.1628 23.9005 42.9341C23.0469 42.7054 22.1696 43.2119 21.9409 44.0655L20.5329 49.3201C20.3042 50.1737 20.8107 51.051 21.6643 51.2797C22.5178 51.5084 23.3951 51.0019 23.6239 50.1483L25.0318 44.8937Z" fill="#1976D2"/>
+                        <path class="droplet delay5" d="M34.359 44.8937C34.5877 44.0402 34.0812 43.1628 33.2276 42.9341C32.3741 42.7054 31.4967 43.2119 31.268 44.0655L29.86 49.3201C29.6313 50.1737 30.1379 51.051 30.9914 51.2797C31.845 51.5084 32.7223 51.0019 32.951 50.1483L34.359 44.8937Z" fill="#1976D2"/>
+                        <path class="droplet delay7" d="M43.6861 44.8937C43.9148 44.0402 43.4083 43.1628 42.5548 42.9341C41.7012 42.7054 40.8239 43.2119 40.5952 44.0655L39.1872 49.3201C38.9585 50.1737 39.465 51.051 40.3186 51.2797C41.1721 51.5084 42.0494 51.0019 42.2782 50.1483L43.6861 44.8937Z" fill="#1976D2"/>
+                        <path class="droplet delay9" d="M52.6861 44.8937C52.9148 44.0402 52.4083 43.1628 51.5548 42.9341C50.7012 42.7054 49.8239 43.2119 49.5952 44.0655L48.1872 49.3201C47.9585 50.1737 48.465 51.051 49.3186 51.2797C50.1721 51.5084 51.0494 51.0019 51.2782 50.1483L52.6861 44.8937Z" fill="#1976D2"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Thunderstorm",
+                description: "Thunderstorm with lightning",
+                codes: [200, 201, 202, 210, 211, 212, 221, 230, 231, 232],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path class="bolt" fill-rule="evenodd" clip-rule="evenodd" d="M37.44 39.9724C37.44 39.8018 37.217 39.68 36.9303 39.68H27.5649C27.3419 39.68 27.1189 39.7775 27.087 39.8993L23.3918 47.9635C23.36 47.9878 23.36 48.0366 23.36 48.0853C23.36 48.2558 23.583 48.3776 23.8697 48.3776H27.3419L24.0289 55.5891C23.9971 55.6378 23.9971 55.6866 23.9971 55.7353C23.9971 56.052 24.4431 56.32 24.9846 56.32C25.335 56.32 25.6536 56.1982 25.8447 56.0276L36.7073 45.0155C36.7392 44.9668 36.7392 44.9424 36.7392 44.8937C36.7392 44.7232 36.5162 44.6014 36.2295 44.6014H32.9165L37.3444 40.1185C37.4081 40.0942 37.44 40.0455 37.44 39.9724Z" fill="#F9D915"/>
+                        <path class="cloud-thunder" fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.2911 20.5568 42.7686 23.899C41.359 18.2069 37.0238 14.08 30.6523 14.08C23.7452 14.08 16.3956 18.0224 16.677 28.16C12.3973 27.0336 8.94416 29.3661 7.90104 33.3769C6.94899 37.0376 8.94416 42.24 16.3956 42.24C32.3525 42.24 42.5741 42.24 47.0603 42.24C53.7896 42.24 57.0167 36.2658 56.1709 30.6282Z" fill="#888888"/>
+                        <path class="cloud-thunder flash" fill="url(#paint0_radial)" fill-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" clip-rule="evenodd"/>
+                        <defs>
+                            <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientTransform="translate(32 42) rotate(90) scale(9 31.5696)" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#ffffff"/>
+                                <stop offset="1" stop-color="white" stop-opacity="0"/>
+                            </radialGradient>
+                        </defs>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Light Snow",
+                description: "Light snowfall",
+                codes: [600, 620],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" fill="#DDDDDD"/>
+                        <circle cx="20" cy="48" r="2" fill="#FFFFFF" opacity="0.8"/>
+                        <circle cx="30" cy="52" r="1.5" fill="#FFFFFF" opacity="0.6"/>
+                        <circle cx="40" cy="49" r="2" fill="#FFFFFF" opacity="0.8"/>
+                        <circle cx="25" cy="46" r="1" fill="#FFFFFF" opacity="0.5"/>
+                        <circle cx="35" cy="54" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Snow",
+                description: "Moderate to heavy snow",
+                codes: [601, 621],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" fill="#CCCCCC"/>
+                        <circle cx="18" cy="46" r="2.5" fill="#FFFFFF"/>
+                        <circle cx="28" cy="50" r="2" fill="#FFFFFF"/>
+                        <circle cx="38" cy="47" r="2.5" fill="#FFFFFF"/>
+                        <circle cx="48" cy="51" r="2" fill="#FFFFFF"/>
+                        <circle cx="23" cy="52" r="1.5" fill="#FFFFFF"/>
+                        <circle cx="33" cy="49" r="1.5" fill="#FFFFFF"/>
+                        <circle cx="43" cy="53" r="1.5" fill="#FFFFFF"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Wind",
+                description: "Strong winds",
+                codes: [731, 751, 761, 762, 771, 781],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g fill="none" stroke="#2196F3" stroke-width="3" stroke-linecap="round">
+                        <path class="wind wind-top" d="M10 20 Q25 15 40 20"/>
+                        <path class="wind wind-middle" d="M8 32 Q30 25 52 32"/>
+                        <path class="wind wind-bottom" d="M12 44 Q28 40 44 44"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Fog",
+                description: "Foggy conditions",
+                codes: [701, 711, 741],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <rect x="10" y="28" width="44" height="3" rx="1.5" fill="#CCCCCC" opacity="0.7"/>
+                        <rect x="8" y="34" width="48" height="3" rx="1.5" fill="#CCCCCC" opacity="0.6"/>
+                        <rect x="12" y="40" width="40" height="3" rx="1.5" fill="#CCCCCC" opacity="0.8"/>
+                        <rect x="6" y="46" width="52" height="3" rx="1.5" fill="#CCCCCC" opacity="0.5"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Haze",
+                description: "Hazy atmosphere",
+                codes: [721],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <circle cx="32" cy="32" r="20" fill="#F9D915" opacity="0.3"/>
+                        <circle cx="32" cy="32" r="15" fill="#F9D915" opacity="0.5"/>
+                        <circle cx="32" cy="32" r="10" fill="#F9D915" opacity="0.7"/>
+                        <circle cx="32" cy="32" r="5" fill="#F9D915"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: "Sleet",
+                description: "Freezing rain/sleet",
+                codes: [611, 612, 613],
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 64 64" class="weather-icon-animated">
+                    <g>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1709 30.6282C55.3251 24.9906 49.291 20.5568 42.7686 23.899C41.3589 18.2069 37.0237 14.08 30.6522 14.08C23.7451 14.08 16.3955 18.0224 16.6769 28.16C12.3972 27.0336 8.9441 29.3661 7.90098 33.3769C6.94893 37.0376 8.9441 42.24 16.3955 42.24C32.3525 42.24 42.574 42.24 47.0602 42.24C53.7895 42.24 57.0166 36.2658 56.1709 30.6282Z" fill="#DDDDDD"/>
+                        <circle class="sleet delay1" cx="20" cy="48" r="1.5" fill="#87CEEB"/>
+                        <circle class="sleet delay3" cx="30" cy="52" r="1.5" fill="#87CEEB"/>
+                        <circle class="sleet delay5" cx="40" cy="49" r="1.5" fill="#87CEEB"/>
+                        <path class="droplet delay2" d="M25.7047 44.8937C25.9334 44.0402 25.4269 43.1628 24.5733 42.9341C23.7198 42.7054 22.8424 43.2119 22.6137 44.0655L21.2057 49.3201C20.977 50.1737 21.4836 51.051 22.3371 51.2797C23.1907 51.5084 24.068 51.0019 24.2967 50.1483L25.7047 44.8937Z" fill="#3396CC"/>
+                        <path class="droplet delay4" d="M35.7047 44.8937C35.9334 44.0402 35.4269 43.1628 34.5733 42.9341C33.7198 42.7054 32.8424 43.2119 32.6137 44.0655L31.2057 49.3201C30.977 50.1737 31.4836 51.051 32.3371 51.2797C33.1907 51.5084 34.068 51.0019 34.2967 50.1483L35.7047 44.8937Z" fill="#3396CC"/>
+                    </g>
+                </svg>`
+            }
+        ];
+
+        // Gallery functionality
+        class WeatherGallery {
+            constructor() {
+                this.galleryGrid = document.getElementById('galleryGrid');
+                this.speedControl = document.getElementById('speedControl');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.playBtn = document.getElementById('playBtn');
+                this.bgControl = document.getElementById('bgControl');
+                
+                this.init();
+            }
+
+            init() {
+                this.renderIcons();
+                this.setupControls();
+            }
+
+            renderIcons() {
+                this.galleryGrid.innerHTML = '';
+                
+                weatherIcons.forEach(icon => {
+                    const iconCard = document.createElement('div');
+                    iconCard.className = 'icon-card';
+                    
+                    const codes = icon.codes.map(code => `#${code}`).join(' ');
+                    
+                    iconCard.innerHTML = `
+                        <div class="icon-container">
+                            ${icon.svg}
+                        </div>
+                        <div class="icon-name">${icon.name}</div>
+                        <div class="icon-description">${icon.description}</div>
+                        <div class="icon-weather-code">${codes}</div>
+                    `;
+                    
+                    this.galleryGrid.appendChild(iconCard);
+                });
+            }
+
+            setupControls() {
+                this.speedControl.addEventListener('change', (e) => {
+                    const body = document.body;
+                    body.classList.remove('slow', 'fast');
+                    
+                    if (e.target.value === 'slow') {
+                        body.classList.add('slow');
+                    } else if (e.target.value === 'fast') {
+                        body.classList.add('fast');
+                    }
+                });
+
+                this.pauseBtn.addEventListener('click', () => {
+                    document.body.classList.add('paused');
+                });
+
+                this.playBtn.addEventListener('click', () => {
+                    document.body.classList.remove('paused');
+                });
+
+                this.bgControl.addEventListener('change', (e) => {
+                    const body = document.body;
+                    
+                    switch(e.target.value) {
+                        case 'dark':
+                            body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+                            break;
+                        case 'light':
+                            body.style.background = 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)';
+                            break;
+                        default:
+                            body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    }
+                });
+            }
+        }
+
+        // Initialize gallery when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new WeatherGallery();
+        });
+    </script>
+</body>
+</html>
